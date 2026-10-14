@@ -1,4 +1,3 @@
-
 pipeline {
     agent any
 
@@ -21,16 +20,12 @@ pipeline {
             }
         }
 
-        stage('Run React App') {
+        stage('Run Docker App') {
             steps {
-                bat 'start "Vite Server" cmd /c "npm run dev -- --host 0.0.0.0"'
+                bat 'docker rm -f student-app 2>NUL || exit /b 0'
+                bat 'docker build -t student-management .'
+                bat 'docker run -d --name student-app -p 5173:5173 student-management'
             }
-        }
-    }
-
-    post {
-        success {
-            echo 'React app started. Open http://localhost:5173'
         }
     }
 }
